@@ -50,7 +50,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function SignIn() {
+export default function SignIn(props) {
   const classes = useStyles();
 
   return (
@@ -106,9 +106,15 @@ export default function SignIn() {
               </Link>
             </Grid>
             <Grid item>
-              <Link href="#" variant="body2">
-                {"Don't have an account? Sign Up"}
-              </Link>
+                <Button
+                fullWidth
+                variant="contained"
+                onClick={()=> {props.changeViewMode()}}
+                color="secondary"
+                className={classes.submit}
+              >
+                Sign Up
+              </Button>
             </Grid>
           </Grid>
         </form>

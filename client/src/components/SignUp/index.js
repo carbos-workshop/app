@@ -50,7 +50,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function SignUp() {
+export default function SignUp(props) {
   const classes = useStyles();
 
   return (
@@ -128,11 +128,15 @@ export default function SignUp() {
             Sign Up
           </Button>
           <Grid container justify="flex-end">
-            <Grid item>
-              <Link href="#" variant="body2">
-                Already have an account? Sign in
-              </Link>
-            </Grid>
+            <Button
+              fullWidth
+              variant="contained"
+              onClick={()=> {props.changeViewMode()}}
+              color="secondary"
+              className={classes.submit}
+            >
+              Sign In
+            </Button>
           </Grid>
         </form>
       </div>
