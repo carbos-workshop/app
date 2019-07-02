@@ -13,6 +13,8 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
+import { authService } from '../../services/auth.service'
+
 function MadeWithLove() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -52,6 +54,12 @@ const useStyles = makeStyles(theme => ({
 
 export default function SignIn(props) {
   const classes = useStyles();
+
+  function signIn(e) {
+    e.preventDefault()
+    console.log('signin event ->', e);
+    authService.signIn(e)
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -95,6 +103,7 @@ export default function SignIn(props) {
             fullWidth
             variant="contained"
             color="primary"
+            onClick={signIn}
             className={classes.submit}
           >
             Sign In

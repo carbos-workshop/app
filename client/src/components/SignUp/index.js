@@ -12,6 +12,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import { authService } from '../../services/auth.service'
 
 function MadeWithLove() {
   return (
@@ -52,6 +53,12 @@ const useStyles = makeStyles(theme => ({
 
 export default function SignUp(props) {
   const classes = useStyles();
+
+  function signUp(e) {
+    e.preventDefault()
+    console.log('signup event ->', e);
+    authService.signUp(e)
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -121,6 +128,7 @@ export default function SignUp(props) {
           <Button
             type="submit"
             fullWidth
+            onClick={signUp}
             variant="contained"
             color="primary"
             className={classes.submit}
