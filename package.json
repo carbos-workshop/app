@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/zeppelinos/tutorial-kit#readme",
   "dependencies": {
+    "bnc-assist": "^0.9.1",
     "dotenv": "^6.2.0",
     "openzeppelin-eth": "^2.1.3",
     "truffle-hdwallet-provider": "^1.0.3",
