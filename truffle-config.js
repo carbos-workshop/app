@@ -1,9 +1,7 @@
 const path = require("path");
 require('dotenv').config();
-const mnemonic = process.env.MNENOMIC;
+const mnemonic = process.env.INFURA_MNEMONIC;
 const HDWalletProvider = require("truffle-hdwallet-provider");
-// Create your own key for Production environments (https://infura.io/)
-const INFURA_ID = 'd6760e62b67f4937ba1ea2691046f06d';
 
 module.exports = {
   // See <http://truffleframework.com/docs/advanced/configuration>

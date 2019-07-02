@@ -13,11 +13,11 @@ export const getUserState = () => getAssist().getState()
 // Otherwise will initialize assist with the config object
 export function getAssist(web3) {
   if (!initializedAssist) {
-    console.log('init blocknative with this .env network', process.env.REACT_APP_NETWORK)
+    console.log('initialized blocknative for', process.env.NODE_ENV, 'environment ( network =', process.env.REACT_APP_NETWORK, ')')
     initializedAssist = bnc.init(
       {
-        networkId: process.env.REACT_APP_NETWORK || 1,
-        dappId: 'e2a594cc-3603-4d3e-8f20-ad75a55e93c', // from https://accounts.blocknative.com
+        networkId: Number(process.env.REACT_APP_NETWORK) || 1,
+        dappId: process.env.REACT_APP_BLOCKNATIVE_API_KEY, // from https://accounts.blocknative.com
         web3,
         messages: { // optional custom notification text handlers, see documentation
           txSent: txSentMsg,
