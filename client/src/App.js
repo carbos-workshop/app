@@ -1,13 +1,18 @@
 import React from 'react';
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
 import lightTheme from './themes/light.theme.js';
 import { getAssist } from './services/blocknative.service'
+import './App.css';
 
 import Login from './layouts/Login'
 
-import './App.css';
+//temp
+function Index() {
+  return <h2>Home</h2>;
+}
 
 export default class App extends React.Component {
 
@@ -27,14 +32,21 @@ export default class App extends React.Component {
 
   render(){
     return (
-      <React.Fragment>
-        <CssBaseline />
-        <MuiThemeProvider theme={lightTheme}>
-          <div className="App">
-            <Login />
-          </div>
-        </MuiThemeProvider>
-      </React.Fragment>
+      <Router>
+        <React.Fragment>
+          <CssBaseline />
+          <MuiThemeProvider theme={lightTheme}>
+            {/* <div className="App">
+              <Login />
+            </div> */}
+
+            <Route path="/" exact component={Index} />
+            <Route path="/login" component={Login} />
+            {/* <Route path="/forgot-password" component={Users} /> */}
+            
+          </MuiThemeProvider>
+        </React.Fragment>
+      </Router>
     ) 
   }
 }
