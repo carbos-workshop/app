@@ -12,6 +12,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import classNames from 'classnames'
 
 import { authService } from '../../services/auth.service'
 
@@ -38,6 +39,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    // transition: 'all 2s ease'
   },
   avatar: {
     margin: theme.spacing(1),
@@ -50,6 +52,18 @@ const useStyles = makeStyles(theme => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  changeViewModeButton: {
+    [theme.breakpoints.up('md')]: {
+      display: 'none'
+    }
+  },
+  hide: {
+    [theme.breakpoints.up('sm')]: {
+      opacity: '0',
+      width: '0',
+      display: 'none'
+    }
+  }
 }));
 
 export default function SignIn(props) {
@@ -64,7 +78,12 @@ export default function SignIn(props) {
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
-      <div className={classes.paper}>
+
+        <div className={classNames([
+          classes.paper, 
+          (props.hideForm
+            ? classes.hide
+            : null)])}>
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
         </Avatar>
@@ -120,7 +139,7 @@ export default function SignIn(props) {
                 variant="contained"
                 onClick={()=> {props.changeViewMode()}}
                 color="secondary"
-                className={classes.submit}
+                className={classes.changeViewModeButton}
               >
                 Sign Up
               </Button>
@@ -128,9 +147,7 @@ export default function SignIn(props) {
           </Grid>
         </form>
       </div>
-      <Box mt={5}>
-        <MadeWithLove />
-      </Box>
+
     </Container>
   );
 }

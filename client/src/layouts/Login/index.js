@@ -1,16 +1,37 @@
 import React, { useReducer } from 'react'
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
-
+import classNames from 'classnames'
 import SignIn from '../../components/SignIn'
 import SignUp from '../../components/SignUp'
+import { height } from '@material-ui/system';
 
 
 
 const useStyles = makeStyles(theme => ({
     root:{
-      overflowX: 'hidden'
+      width: '100%',
+      display: 'flex',
+      minHeight: '100vh',
+      [theme.breakpoints.down('xs')]: {
+        flexDirection: 'column',
+      },
     },
+    formWrapper: {
+      flexGrow: '1',
+      transition: 'flex-grow .5s ease'
+    },
+    active: {
+      [theme.breakpoints.down('sm')]: {
+        flexGrow: '3',
+        background: 'red'
+      }
+    },
+    inactive: {
+      [theme.breakpoints.down('xs')]: {
+        display: 'none'
+      }
+    }
   } 
 ))
 
@@ -34,15 +55,31 @@ export default function Login() {
     {viewMode: 'signIn'}
   );
 
+  function shouldHideForm(viewMode){
+    return state.viewMode === viewMode
+  }
+
   return (
-    <Grid container className={classes.root}>
-      <Grid item xs={6}>
-        viewing mode: {state.viewMode }
-        <SignIn changeViewMode={()=>{dispatch({type: 'viewSignUp'})}}/>
-      </Grid>
-      <Grid item xs={6}>
-        <SignUp changeViewMode={()=>{dispatch({type: 'viewSignIn'})}}/>
-      </Grid>
-    </Grid>
+    <div className={classes.root}>
+
+      <div className={classNames([
+        classes.formWrapper,
+        (state.viewMode === 'signIn'
+          ? classes.active
+          : classes.inactive)
+        ])}>
+        <SignIn changeViewMode={()=>{dispatch({type: 'viewSignUp'})}} hideForm={shouldHideForm('signUp')}/>
+      </div>
+
+      <div className={classNames([
+        classes.formWrapper,
+        (state.viewMode === 'signUp'
+        ? classes.active
+        : classes.inactive)
+        ])}>
+        <SignUp changeViewMode={()=>{dispatch({type: 'viewSignIn'})}} hideForm={shouldHideForm('signIn')}/>
+      </div>
+
+    </div>
   )
 }

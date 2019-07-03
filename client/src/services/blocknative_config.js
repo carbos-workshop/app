@@ -26,7 +26,7 @@ export function getAssist(web3) {
           txFailed: txFailedMsg
         },
         style: {
-          darkMode: true // optional style settings, see documentation
+          // darkMode: true // optional style settings, see documentation
         }
       }
     )
