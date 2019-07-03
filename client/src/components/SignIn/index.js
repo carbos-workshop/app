@@ -1,5 +1,5 @@
 import React from 'react';
-import Avatar from '@material-ui/core/Avatar';
+// import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
@@ -8,57 +8,47 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import { grey } from '@material-ui/core/colors';
+
+// import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import classNames from 'classnames'
 
 import { authService } from '../../services/auth.service'
 
-function MadeWithLove() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Built with love by the '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Material-UI
-      </Link>
-      {' team.'}
-    </Typography>
-  );
-}
-
 const useStyles = makeStyles(theme => ({
-  '@global': {
-    body: {
-      backgroundColor: theme.palette.common.white,
-    },
+  root: {
+    padding: '0',
   },
   paper: {
     marginTop: theme.spacing(8),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    // transition: 'all 2s ease'
+    padding: '12px 32px'
   },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
+  title: {
+   fontWeight: '700',
+    color: theme.palette.background.paper,
+
   },
   form: {
     width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing(1),
   },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
+
   changeViewModeButton: {
     [theme.breakpoints.up('md')]: {
       display: 'none'
     }
   },
+  whiteText: {
+    color: 'white'
+  },
   hide: {
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.down('sm')]: {
       opacity: '0',
       width: '0',
       display: 'none'
@@ -66,6 +56,66 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+//local components
+const TextButton = withStyles(theme => ({
+  root: {
+    color: 'white',
+    // backgroundColor: '#fff',
+    // '&:hover': {
+    //   backgroundColor: grey[50],
+    // },
+  },
+}))(Button);
+
+const WhiteButton = withStyles(theme => ({
+  root: {
+    color: theme.palette.primary.main,
+    backgroundColor: '#fff',
+    '&:hover': {
+      backgroundColor: grey[50],
+    },
+  },
+}))(Button);
+
+const WhiteTextField = withStyles({
+  root: {
+    '& label.Mui-focused': {
+      color: 'white',
+    },
+    '& .MuiInput-underline:after': {
+      borderBottomColor: 'white',
+    },
+    '& .MuiOutlinedInput-root': {
+      '& fieldset': {
+        borderColor: 'rgba(255,255,255,0.55)',
+      },
+      '&:hover fieldset': {
+        borderColor: 'white',
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: 'white',
+      },
+    },
+    '& .MuiFormLabel-root':{
+      color: 'rgba(255,255,255,0.55)'
+    },
+    '& .MuiInputBase-input':{
+      color: 'white'
+    },
+  },
+})(TextField);
+
+const WhiteCheckbox = withStyles({
+  root: {
+    color: 'white',
+    '&$checked': {
+      color: 'white',
+    },
+  },
+  checked: {},
+})(props => <Checkbox color="default" {...props} />);
+
+//main component
 export default function SignIn(props) {
   const classes = useStyles();
 
@@ -76,37 +126,42 @@ export default function SignIn(props) {
   }
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="xs" className={classes.root}>
       <CssBaseline />
+
+        <Typography component="h1" variant="h4" className={classNames([
+          classes.title,
+          (props.hideForm
+            ? classes.hide
+            : null)])}>
+          Sign in
+        </Typography>
 
         <div className={classNames([
           classes.paper, 
           (props.hideForm
             ? classes.hide
             : null)])}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign in
-        </Typography>
+ 
         <form className={classes.form} noValidate>
-          <TextField
+          <WhiteTextField
             variant="outlined"
             margin="normal"
             required
             fullWidth
+            key={`${props.hideForm}1`} //attaching key for props stops resize bug in material UI resize text fields
             id="email"
             label="Email Address"
             name="email"
             autoComplete="email"
             autoFocus
           />
-          <TextField
+          <WhiteTextField
             variant="outlined"
             margin="normal"
             required
             fullWidth
+            key={`${props.hideForm}2`}  //attaching key for props stops resize bug in material UI resize text fields
             name="password"
             label="Password"
             type="password"
@@ -114,35 +169,42 @@ export default function SignIn(props) {
             autoComplete="current-password"
           />
           <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
+            control={<WhiteCheckbox value="remember" color="primary" />}
+            label={<span className={classes.whiteText}>Remember me</span>}
           />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            onClick={signIn}
-            className={classes.submit}
-          >
-            Sign In
-          </Button>
+
+          <Grid container spacing={2}>
+            <Grid item xs={6} md={12}>
+              <WhiteButton
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="default"
+                onClick={signIn}
+                className={classes.submit}
+              >
+                Sign In
+              </WhiteButton>
+            </Grid>
+            <Grid item xs={6}>
+              <TextButton
+                fullWidth
+                onClick={()=> {props.changeViewMode()}}
+                className={classes.changeViewModeButton}
+              >
+                Sign Up
+              </TextButton>
+            </Grid>
+          </Grid>
+
           <Grid container>
             <Grid item xs>
-              <Link href="#" variant="body2">
+              <Link href="#" variant="body2" className={classes.whiteText}>
                 Forgot password?
               </Link>
             </Grid>
             <Grid item>
-                <Button
-                fullWidth
-                variant="contained"
-                onClick={()=> {props.changeViewMode()}}
-                color="secondary"
-                className={classes.changeViewModeButton}
-              >
-                Sign Up
-              </Button>
+
             </Grid>
           </Grid>
         </form>

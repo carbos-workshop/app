@@ -1,4 +1,8 @@
 import React from 'react';
+import { MuiThemeProvider } from '@material-ui/core/styles';
+import CssBaseline from '@material-ui/core/CssBaseline';
+
+import lightTheme from './themes/light.theme.js';
 import { getAssist } from './services/blocknative_config'
 
 import Login from './layouts/Login'
@@ -19,9 +23,14 @@ export default class App extends React.Component {
 
   render(){
     return (
-      <div className="App">
-        <Login />
-      </div>
+      <React.Fragment>
+        <CssBaseline />
+        <MuiThemeProvider theme={lightTheme}>
+          <div className="App">
+            <Login />
+          </div>
+        </MuiThemeProvider>
+      </React.Fragment>
     ) 
   }
 }

@@ -13,6 +13,11 @@ const useStyles = makeStyles(theme => ({
       width: '100%',
       display: 'flex',
       minHeight: '100vh',
+      backgroundImage: "url('images/forest.jpg')",
+      backgroundPosition: 'center',
+      backgroundSize: 'cover',
+      backgroundRepeat: 'no-repeat',
+    
       [theme.breakpoints.down('xs')]: {
         flexDirection: 'column',
       },
@@ -24,13 +29,18 @@ const useStyles = makeStyles(theme => ({
     active: {
       [theme.breakpoints.down('sm')]: {
         flexGrow: '3',
-        background: 'red'
       }
     },
     inactive: {
       [theme.breakpoints.down('xs')]: {
-        display: 'none'
+        display: 'none',
       }
+    },
+    signIn: {
+      background: theme.palette.primary.main
+    },
+    signUp: {
+
     }
   } 
 ))
@@ -52,7 +62,7 @@ export default function Login() {
 
   const [state, dispatch] = useReducer(
     reducer,
-    {viewMode: 'signIn'}
+    {viewMode: 'signUp'}
   );
 
   function shouldHideForm(viewMode){
@@ -64,20 +74,22 @@ export default function Login() {
 
       <div className={classNames([
         classes.formWrapper,
-        (state.viewMode === 'signIn'
+        classes.signUp,
+        (state.viewMode === 'signUp'
           ? classes.active
           : classes.inactive)
         ])}>
-        <SignIn changeViewMode={()=>{dispatch({type: 'viewSignUp'})}} hideForm={shouldHideForm('signUp')}/>
+        <SignUp changeViewMode={()=>{dispatch({type: 'viewSignIn'})}} hideForm={shouldHideForm('signIn')}/>
       </div>
 
       <div className={classNames([
         classes.formWrapper,
-        (state.viewMode === 'signUp'
+        classes.signIn,
+        (state.viewMode === 'signIn'
         ? classes.active
         : classes.inactive)
         ])}>
-        <SignUp changeViewMode={()=>{dispatch({type: 'viewSignIn'})}} hideForm={shouldHideForm('signIn')}/>
+        <SignIn changeViewMode={()=>{dispatch({type: 'viewSignUp'})}} hideForm={shouldHideForm('signUp')}/>
       </div>
 
     </div>

@@ -14,43 +14,29 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { authService } from '../../services/auth.service'
 import classNames from 'classnames'
+import Paper from '@material-ui/core/Paper';
 
-function MadeWithLove() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Built with love by the '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Material-UI
-      </Link>
-      {' team.'}
-    </Typography>
-  );
-}
 
 const useStyles = makeStyles(theme => ({
-  '@global': {
-    body: {
-      backgroundColor: theme.palette.common.white,
-    },
+  root: {
+    padding: '0',
+
   },
   paper: {
     marginTop: theme.spacing(8),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    // transition: 'all 2s ease'
+    padding: '12px 32px'
   },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-  },
+  title: {
+    fontWeight: '700', 
+   },
   form: {
     width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing(3),
   },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
+
   changeViewModeButton: {
     [theme.breakpoints.up('md')]: {
       display: 'none'
@@ -60,7 +46,7 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.down('sm')]: {
       opacity: '0',
       width: '0',
-      display: 'none'
+      display: 'none',
     }
   }
 }));
@@ -75,99 +61,111 @@ export default function SignUp(props) {
   }
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="xs" className={classes.root}>
       <CssBaseline />
-
-        <div className={classNames([
-          classes.paper, 
+        <Typography component="h1" variant="h4" className={classNames([
+          classes.title,
           (props.hideForm
             ? classes.hide
             : null)])}>
-          <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign up
-          </Typography>
-          <form className={classes.form} noValidate>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  autoComplete="fname"
-                  name="firstName"
-                  variant="outlined"
-                  required
-                  fullWidth
-                  id="firstName"
-                  label="First Name"
-                  autoFocus
-                />
+          Sign Up
+        </Typography>
+        <Paper className={classNames([
+          classes.paper,
+          (props.hideForm
+            ? classes.hide
+            : null)])}>
+          <div className={classNames([
+            (props.hideForm
+              ? classes.hide
+              : null)])}>
+            <form className={classes.form} noValidate>
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    autoComplete="fname"
+                    name="firstName"
+                    variant="outlined"
+                    required
+                    key={`${props.hideForm}0`}  //attaching key for props stops resize bug in material UI resize text fields
+                    fullWidth
+                    id="firstName"
+                    label="First Name"
+                    autoFocus
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    key={`${props.hideForm}1`}  //attaching key for props stops resize bug in material UI resize text fields
+                    id="lastName"
+                    label="Last Name"
+                    name="lastName"
+                    autoComplete="lname"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    key={`${props.hideForm}2`}  //attaching key for props stops resize bug in material UI resize text fields
+                    id="email"
+                    label="Email Address"
+                    name="email"
+                    autoComplete="email"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    key={`${props.hideForm}3`}  //attaching key for props stops resize bug in material UI resize text fields
+                    name="password"
+                    label="Password"
+                    type="password"
+                    id="password"
+                    autoComplete="current-password"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <FormControlLabel
+                    control={<Checkbox value="allowExtraEmails" color="primary" />}
+                    label="I want to receive inspiration, marketing promotions and updates via email."
+                  />
+                </Grid>
               </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  autoComplete="lname"
-                />
+
+              <Grid container spacing={2}>
+                <Grid item xs={6} md={12}>
+                  <Button
+                    type="submit"
+                    fullWidth
+                    onClick={signUp}
+                    variant="contained"
+                    color="primary"
+                    className={classes.submit}
+                  >
+                    Sign Up
+                  </Button>
+                </Grid>
+                <Grid item xs={6}>
+                  <Button
+                    fullWidth
+                    onClick={()=> {props.changeViewMode()}}
+                    color="primary"
+                    className={classes.changeViewModeButton}
+                  >
+                    Sign In
+                  </Button>
+                </Grid>
               </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="current-password"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="I want to receive inspiration, marketing promotions and updates via email."
-                />
-              </Grid>
-            </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              onClick={signUp}
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-            >
-              Sign Up
-            </Button>
-            <Grid container justify="flex-end">
-              <Button
-                fullWidth
-                variant="contained"
-                onClick={()=> {props.changeViewMode()}}
-                color="secondary"
-                className={classes.changeViewModeButton}
-              >
-                Sign In
-              </Button>
-            </Grid>
-          </form>
-        </div>
-  
+            </form>
+          </div>
+        </Paper>
     </Container>
   );
 }
