@@ -1,14 +1,9 @@
-import React from 'react';
-import Avatar from '@material-ui/core/Avatar';
+import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
@@ -54,15 +49,28 @@ const useStyles = makeStyles(theme => ({
 export default function SignUp(props) {
   const classes = useStyles();
 
+  const [user, setValues] = useState({
+    firstname: '',
+    lastname: '',
+    email: '',
+    password: ''
+  });
+
+  const updateField = e => {
+    setValues({
+      ...user,
+      [e.target.name]: e.target.value
+    });
+  };
+
+
   function signUp(e) {
     e.preventDefault()
-    console.log('signup event ->', e);
-    authService.signUp(e)
+    authService.signUp(user)
   }
 
   return (
     <Container component="main" maxWidth="xs" className={classes.root}>
-      <CssBaseline />
         <Typography component="h1" variant="h4" className={classNames([
           classes.title,
           (props.hideForm
@@ -84,13 +92,14 @@ export default function SignUp(props) {
                 <Grid item xs={12} sm={6}>
                   <TextField
                     autoComplete="fname"
-                    name="firstName"
+                    name="firstname"
                     variant="outlined"
                     required
                     key={`${props.hideForm}0`}  //attaching key for props stops resize bug in material UI resize text fields
                     fullWidth
-                    id="firstName"
                     label="First Name"
+                    onChange={updateField}
+                    value={user.firstname}
                     autoFocus
                   />
                 </Grid>
@@ -100,9 +109,10 @@ export default function SignUp(props) {
                     required
                     fullWidth
                     key={`${props.hideForm}1`}  //attaching key for props stops resize bug in material UI resize text fields
-                    id="lastName"
                     label="Last Name"
-                    name="lastName"
+                    name="lastname"
+                    onChange={updateField}
+                    value={user.lastname}
                     autoComplete="lname"
                   />
                 </Grid>
@@ -115,6 +125,8 @@ export default function SignUp(props) {
                     id="email"
                     label="Email Address"
                     name="email"
+                    onChange={updateField}
+                    value={user.email}
                     autoComplete="email"
                   />
                 </Grid>
@@ -123,18 +135,13 @@ export default function SignUp(props) {
                     variant="outlined"
                     required
                     fullWidth
+                    onChange={updateField}
+                    value={user.password}
                     key={`${props.hideForm}3`}  //attaching key for props stops resize bug in material UI resize text fields
                     name="password"
                     label="Password"
                     type="password"
-                    id="password"
                     autoComplete="current-password"
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <FormControlLabel
-                    control={<Checkbox value="allowExtraEmails" color="primary" />}
-                    label="I want to receive inspiration, marketing promotions and updates via email."
                   />
                 </Grid>
               </Grid>
@@ -147,8 +154,7 @@ export default function SignUp(props) {
                     onClick={signUp}
                     variant="contained"
                     color="primary"
-                    className={classes.submit}
-                  >
+                    className={classes.submit}>
                     Sign Up
                   </Button>
                 </Grid>
@@ -157,8 +163,7 @@ export default function SignUp(props) {
                     fullWidth
                     onClick={()=> {props.changeViewMode()}}
                     color="primary"
-                    className={classes.changeViewModeButton}
-                  >
+                    className={classes.changeViewModeButton}>
                     Sign In
                   </Button>
                 </Grid>

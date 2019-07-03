@@ -1,10 +1,8 @@
 import React, { useReducer } from 'react'
-import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import classNames from 'classnames'
 import SignIn from '../../components/SignIn'
 import SignUp from '../../components/SignUp'
-import { height } from '@material-ui/system';
 
 
 
@@ -62,7 +60,7 @@ export default function Login() {
 
   const [state, dispatch] = useReducer(
     reducer,
-    {viewMode: 'signUp'}
+    { viewMode: 'signIn' }
   );
 
   function shouldHideForm(viewMode){

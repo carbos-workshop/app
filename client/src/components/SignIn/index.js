@@ -1,16 +1,12 @@
-import React from 'react';
-// import Avatar from '@material-ui/core/Avatar';
+import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
 import { grey } from '@material-ui/core/colors';
 
-// import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
@@ -119,16 +115,33 @@ const WhiteCheckbox = withStyles({
 export default function SignIn(props) {
   const classes = useStyles();
 
+  const [user, setValues] = useState({
+    shouldRemember: false,
+    email: '',
+    password: ''
+  });
+
+  const updateField = e => {
+    setValues({
+      ...user,
+      [e.target.name]: e.target.value
+    });
+  };
+
+ const toggleShouldRemember = () => {
+    setValues({
+      ...user,
+      shouldRemember: !user.shouldRemember
+    })
+  }
+
   function signIn(e) {
     e.preventDefault()
-    console.log('signin event ->', e);
-    authService.signIn(e)
+    authService.signIn(user)
   }
 
   return (
     <Container component="main" maxWidth="xs" className={classes.root}>
-      <CssBaseline />
-
         <Typography component="h1" variant="h4" className={classNames([
           classes.title,
           (props.hideForm
@@ -150,7 +163,8 @@ export default function SignIn(props) {
             required
             fullWidth
             key={`${props.hideForm}1`} //attaching key for props stops resize bug in material UI resize text fields
-            id="email"
+            onChange={updateField}
+            value={user.email}
             label="Email Address"
             name="email"
             autoComplete="email"
@@ -165,11 +179,12 @@ export default function SignIn(props) {
             name="password"
             label="Password"
             type="password"
-            id="password"
+            onChange={updateField}
+            value={user.password}
             autoComplete="current-password"
           />
           <FormControlLabel
-            control={<WhiteCheckbox value="remember" color="primary" />}
+            control={<WhiteCheckbox value={user.shouldRemember} onChange={toggleShouldRemember} color="primary" />}
             label={<span className={classes.whiteText}>Remember me</span>}
           />
 
@@ -181,8 +196,7 @@ export default function SignIn(props) {
                 variant="contained"
                 color="default"
                 onClick={signIn}
-                className={classes.submit}
-              >
+                className={classes.submit}>
                 Sign In
               </WhiteButton>
             </Grid>
@@ -190,8 +204,7 @@ export default function SignIn(props) {
               <TextButton
                 fullWidth
                 onClick={()=> {props.changeViewMode()}}
-                className={classes.changeViewModeButton}
-              >
+                className={classes.changeViewModeButton}>
                 Sign Up
               </TextButton>
             </Grid>

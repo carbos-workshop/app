@@ -3,13 +3,17 @@ import { MuiThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
 import lightTheme from './themes/light.theme.js';
-import { getAssist } from './services/blocknative_config'
+import { getAssist } from './services/blocknative.service'
 
 import Login from './layouts/Login'
 
 import './App.css';
 
 export default class App extends React.Component {
+
+  componentWillMount() {
+    //check cookie for logged in user
+  }
 
   async componentDidMount () {
     const assist = getAssist()
