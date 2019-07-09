@@ -8,7 +8,6 @@ import { authService } from '../../services/auth.service'
 import { UserContext } from '../../contexts/user.context'
 
 //styles
-import { useStyles } from './styles'
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(theme => ({
@@ -20,7 +19,7 @@ const useStyles = makeStyles(theme => ({
 export default function ForgotPassword(props) {
   const classes = useStyles();
 
-  sendReset = () => {
+  const sendReset = () => {
     props.toggleSentResetView()
     //TODO
     console.log('send reset')

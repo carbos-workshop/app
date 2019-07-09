@@ -8,6 +8,7 @@ import { getAssist } from './services/blocknative.service'
 import './App.css';
 
 import Login from './layouts/Login'
+import ResetPassword from './layouts/ResetPassword'
 
 
 // /contexts/reducers
@@ -67,6 +68,7 @@ export default class App extends React.Component {
             <UserContext.Provider value={this.state.user}>
               <Route path="/" exact component={Index} />
               <Route path="/login" component={Login} />
+              <Route path="/forgotpassword" component={ResetPassword} />
             </UserContext.Provider>
           </MuiThemeProvider>
         </React.Fragment>

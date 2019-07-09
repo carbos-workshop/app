@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 
 //components
-import { ForgotPassword } from '../../components/ForgotPassword'
-import { CreateNewPassword } from '../../components/CreateNewPassword'
+import  ForgotPassword  from '../../components/ForgotPassword'
+import  CreateNewPassword  from '../../components/CreateNewPassword'
 
 //services/contexts
 
 
 //styles
-import { useStyles } from './styles'
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(theme => ({
