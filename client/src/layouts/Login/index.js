@@ -4,8 +4,6 @@ import classNames from 'classnames'
 import SignIn from '../../components/SignIn'
 import SignUp from '../../components/SignUp'
 
-
-
 const useStyles = makeStyles(theme => ({
     root:{
       width: '100%',
@@ -69,7 +67,6 @@ export default function Login() {
 
   return (
     <div className={classes.root}>
-
       <div className={classNames([
         classes.formWrapper,
         classes.signUp,
@@ -89,7 +86,6 @@ export default function Login() {
         ])}>
         <SignIn changeViewMode={()=>{dispatch({type: 'viewSignUp'})}} hideForm={shouldHideForm('signUp')}/>
       </div>
-
     </div>
   )
 }

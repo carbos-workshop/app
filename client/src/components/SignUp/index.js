@@ -1,76 +1,33 @@
-import React, { useState } from 'react';
+import React from 'react';
+
+//component imports
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { authService } from '../../services/auth.service'
 import classNames from 'classnames'
 import Paper from '@material-ui/core/Paper';
 
+//services/contextx
+import { authService } from '../../services/auth.service'
+import { UserContext } from '../../contexts/user.context'
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    padding: '0',
-
-  },
-  paper: {
-    marginTop: theme.spacing(8),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    padding: '12px 32px'
-  },
-  title: {
-    fontWeight: '700', 
-   },
-  form: {
-    width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(3),
-  },
-
-  changeViewModeButton: {
-    [theme.breakpoints.up('md')]: {
-      display: 'none'
-    }
-  },
-  hide: {
-    [theme.breakpoints.down('sm')]: {
-      opacity: '0',
-      width: '0',
-      display: 'none',
-    }
-  }
-}));
+//styles
+import { useStyles } from './styles'
 
 export default function SignUp(props) {
   const classes = useStyles();
 
-  const [user, setValues] = useState({
-    firstname: '',
-    lastname: '',
-    email: '',
-    password: ''
-  });
-
-  const updateField = e => {
-    setValues({
-      ...user,
-      [e.target.name]: e.target.value
-    });
-  };
-
-
-  function signUp(e) {
+  function signUp(e, user) {
     e.preventDefault()
     authService.signUp(user)
   }
 
   return (
-    <Container component="main" maxWidth="xs" className={classes.root}>
+    <UserContext.Consumer>
+    {(user) => (
+      <Container component="main" maxWidth="xs" className={classes.root}>
         <Typography component="h1" variant="h4" className={classNames([
           classes.title,
           (props.hideForm
@@ -98,8 +55,8 @@ export default function SignUp(props) {
                     key={`${props.hideForm}0`}  //attaching key for props stops resize bug in material UI resize text fields
                     fullWidth
                     label="First Name"
-                    onChange={updateField}
-                    value={user.firstname}
+                    onChange={e => { user.dispatch({type: 'UPDATE_USER_FIRSTNAME', payload: e.target.value}) }}
+                    value={user.name.firstname}
                     autoFocus
                   />
                 </Grid>
@@ -111,8 +68,8 @@ export default function SignUp(props) {
                     key={`${props.hideForm}1`}  //attaching key for props stops resize bug in material UI resize text fields
                     label="Last Name"
                     name="lastname"
-                    onChange={updateField}
-                    value={user.lastname}
+                    onChange={e => { user.dispatch({type: 'UPDATE_USER_LASTNAME', payload: e.target.value}) }}
+                    value={user.name.lastname}
                     autoComplete="lname"
                   />
                 </Grid>
@@ -125,7 +82,7 @@ export default function SignUp(props) {
                     id="email"
                     label="Email Address"
                     name="email"
-                    onChange={updateField}
+                    onChange={e => { user.dispatch({type: 'UPDATE_USER_EMAIL', payload: e.target.value}) }}
                     value={user.email}
                     autoComplete="email"
                   />
@@ -135,7 +92,7 @@ export default function SignUp(props) {
                     variant="outlined"
                     required
                     fullWidth
-                    onChange={updateField}
+                    onChange={e => { user.dispatch({type: 'UPDATE_USER_PASSWORD', payload: e.target.value}) }}
                     value={user.password}
                     key={`${props.hideForm}3`}  //attaching key for props stops resize bug in material UI resize text fields
                     name="password"
@@ -151,7 +108,7 @@ export default function SignUp(props) {
                   <Button
                     type="submit"
                     fullWidth
-                    onClick={signUp}
+                    onClick={e => { signUp(e, user) }}
                     variant="contained"
                     color="primary"
                     className={classes.submit}>
@@ -171,6 +128,8 @@ export default function SignUp(props) {
             </form>
           </div>
         </Paper>
-    </Container>
+      </Container>
+    )}
+    </UserContext.Consumer>
   );
 }

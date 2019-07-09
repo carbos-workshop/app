@@ -8,19 +8,19 @@ let password = '@Nellie31'
 
 Amplify.configure({
    Auth: {
-       // REQUIRED - Amazon Cognito Identity Pool ID
-       identityPoolId: 'us-east-1:53bb52e3-94a8-4c9f-88bc-62f8cca2866f',
-       // REQUIRED - Amazon Cognito Region
-       region: 'us-east-1',
-       // OPTIONAL - Amazon Cognito User Pool ID
-       userPoolId: 'us-east-1_Jfx0wWkv4',
-      //  // OPTIONAL - Amazon Cognito Web Client ID
-       userPoolWebClientId: '3qge8ij5t7k0kcncm6fnnbo1rt',
+    // REQUIRED - Amazon Cognito Identity Pool ID
+    identityPoolId: 'us-east-1:53bb52e3-94a8-4c9f-88bc-62f8cca2866f',
+    // REQUIRED - Amazon Cognito Region
+    region: 'us-east-1',
+    // OPTIONAL - Amazon Cognito User Pool ID
+    userPoolId: 'us-east-1_Jfx0wWkv4',
+    // OPTIONAL - Amazon Cognito Web Client ID
+    userPoolWebClientId: '3qge8ij5t7k0kcncm6fnnbo1rt',
    }
 });
 
 export const authService = {
-  signIn: async(user) => {
+  signIn: async(user, remember) => {
     console.log('authservice event', user)
     //send AWS auth
     try {
@@ -28,18 +28,17 @@ export const authService = {
         username: user.email,
         password: user.password,
       })
-      
+      //TODO REMEMBER USER
+      console.log('should rememnber this user->', remember)
       console.log(signInResponse)
     }
     catch (e) {
       console.log('signup error', e)
     }
+    //TODO
     //set time to live?
-    
     //check if session or local sotrage ie remember me
-
     // put user info into storage/cookie
-
     //naigvate the router to '/' or '/' something so that the app can check the cookie again on ComponentWillMount
   },
 
@@ -54,7 +53,6 @@ export const authService = {
             name: user.firstname   
         }
         })
-
       console.log(signUpResponse)
     }
     catch (e) {
@@ -64,6 +62,7 @@ export const authService = {
   },
 
   socialSignIn: event => {
+    //TODO
     //time to live?
   }
 }

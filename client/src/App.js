@@ -9,12 +9,40 @@ import './App.css';
 
 import Login from './layouts/Login'
 
+
+// /contexts/reducers
+import { UserContext, User } from './contexts/user.context'
+import { UserReducer } from './contexts/user.reducer'
+
 //temp
 function Index() {
   return <h2>Home</h2>;
 }
 
 export default class App extends React.Component {
+
+  constructor(props) {
+    super(props);
+
+    //copy new user attributes returned by the reducer and re-copy dispatch to the new state
+    this.userReducer = (action) => {
+      this.setState(
+        {
+          ...this.state,
+          user: UserReducer(this.state.user, action),
+          dispatch: this.userReducer
+        }
+      )
+    }
+
+    //need to attach reducer and user attributes to state
+    this.state = {
+      user: {
+        ...User,
+        dispatch: this.userReducer
+      }
+    };
+  }
 
   componentWillMount() {
     //check cookie for logged in user
@@ -36,14 +64,10 @@ export default class App extends React.Component {
         <React.Fragment>
           <CssBaseline />
           <MuiThemeProvider theme={lightTheme}>
-            {/* <div className="App">
-              <Login />
-            </div> */}
-
-            <Route path="/" exact component={Index} />
-            <Route path="/login" component={Login} />
-            {/* <Route path="/forgot-password" component={Users} /> */}
-            
+            <UserContext.Provider value={this.state.user}>
+              <Route path="/" exact component={Index} />
+              <Route path="/login" component={Login} />
+            </UserContext.Provider>
           </MuiThemeProvider>
         </React.Fragment>
       </Router>
