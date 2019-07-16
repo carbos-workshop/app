@@ -43,14 +43,15 @@ export const authService = {
   },
 
   signUp: async(user) => {
+    console.log('signing up', user)
 
     try {
       const signUpResponse = await Auth.signUp({
         username: user.email,
         password: user.password,
         attributes: {
-            family_name: user.lastname, 
-            name: user.firstname   
+            family_name: user.name.lastname, 
+            name: user.name.firstname   
         }
         })
       console.log(signUpResponse)
@@ -64,5 +65,28 @@ export const authService = {
   socialSignIn: event => {
     //TODO
     //time to live?
+  },
+
+  sendResetPassword: async(email) => {
+    try{
+      const confirmReset = await Auth.forgotPassword(email);
+      console.log(confirmReset)
+
+    } catch(e) {
+      console.log('send Reset Error', e)
+    }
+  },
+
+  confirmPasswordReset: async(email, verificationcode, newpassword) => {
+    try{
+      await Auth.forgotPasswordSubmit(
+        email,
+        verificationcode,
+        newpassword
+      );
+      } catch(e) {
+        console.log('confim new password error', e)
+      }
   }
+
 }

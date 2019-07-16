@@ -2,7 +2,7 @@
 //action should be { payload: <ANY>, type: <STRING> }
 //returns new uesr object
 export const UserReducer = (user, action) => {
-  console.log(action)
+  // console.log(action)
   switch (action.type) {
     case 'UPDATE_USER_EMAIL':
       return { 

@@ -2,6 +2,8 @@ import React from 'react';
 
 //components
 import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+
 
 //context/services
 import { authService } from '../../services/auth.service'
@@ -19,10 +21,11 @@ const useStyles = makeStyles(theme => ({
 export default function ForgotPassword(props) {
   const classes = useStyles();
 
-  const sendReset = () => {
+  const sendReset = email => {
     props.toggleSentResetView()
     //TODO
     console.log('send reset')
+    authService.sendResetPassword(email)
     //display message saying check email
   }
 
@@ -31,9 +34,15 @@ export default function ForgotPassword(props) {
     {(user) => (
       <div className={classes.root}>
 
-        Email : {user.email}
-
-        <Button onClick={sendReset}>
+        <TextField
+          variant="outlined"
+          margin="normal"
+          required
+          onChange={e => {  user.dispatch({type: 'UPDATE_USER_EMAIL', payload: e.target.value }) }}
+          value={user.email}
+          label="Email"
+        />
+        <Button onClick={() => {sendReset(user.email)}}>
           Reset Password
         </Button>
       </div>
