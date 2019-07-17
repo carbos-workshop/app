@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/zeppelinos/tutorial-kit#readme",
   "dependencies": {
-    "bnc-assist": "^0.9.1",
+    "bnc-assist": "^0.9.3",
     "dotenv": "^6.2.0",
     "jwt-decode": "^2.2.0",
     "openzeppelin-eth": "^2.1.3",
@@ -33,6 +33,6 @@
   "devDependencies": {
     "chai": "^4.2.0",
     "openzeppelin-test-helpers": "^0.3.0",
-    "zos": "^2.3.0"
+    "zos": "^2.4.1"
   }
 }
