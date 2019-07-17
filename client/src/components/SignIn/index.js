@@ -48,7 +48,7 @@ export default function SignIn(props) {
           (props.hideForm
             ? classes.hide
             : null)])}>
-          Sign in
+          Sign In
         </Typography>
 
         <div className={classNames([
