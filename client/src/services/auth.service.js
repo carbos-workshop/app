@@ -26,6 +26,7 @@ const setUserSession = (user, cognitoResponse) => {
 export const authService = {
 
   authenticate: (user) => {
+    //if no user passed, check storage for user
     if (!user) {
       user = JSON.parse(localStorage.getItem('user'))
       if (user === null) { return false } //trying to authenticate non logged in user
@@ -35,7 +36,10 @@ export const authService = {
     if (Decode(user.jwt).exp > (Date.now() / 1000)){
       //TODO add other checks on user
       return true
-    } else return false
+    } else {
+      localStorage.clear() //nuke expired user
+      return false
+    }
   },
 
   signIn: async(user, remember) => {
@@ -83,9 +87,8 @@ export const authService = {
     
   },
 
-  socialSignIn: event => {
+  socialSignIn: async(event) => {
     //TODO
-    //time to live?
   },
 
   sendResetPassword: async(email) => {

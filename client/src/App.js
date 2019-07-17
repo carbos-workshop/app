@@ -14,7 +14,7 @@ import './App.css';
 
 import Login from './layouts/Login'
 import ResetPassword from './layouts/ResetPassword'
-
+import VerifyEmail from './layouts/VerifyEmail'
 
 // /contexts/reducers
 import { UserContext, User } from './contexts/user.context'
@@ -25,10 +25,7 @@ import { authService } from './services/auth.service.js';
 function Index() {
   return <h2>Logged In Home</h2>;
 }
-//temp
-function VerifyEmail() {
-  return <h2>Please verify your email before continuing.</h2>;
-}
+
 //temp
 function NoMatch() {
   return <h2>404</h2>;

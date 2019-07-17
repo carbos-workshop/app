@@ -3,7 +3,10 @@ import React, {useState} from 'react';
 //components
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-
+import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
+import SendIcon from '@material-ui/icons/Send';
 
 //context/services
 import { authService } from '../../services/auth.service'
@@ -14,7 +17,30 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    
+    height: '100%'
+   },
+   paperWrapper: {
+     height: '100%'
+   },
+   paper: {
+     padding: theme.spacing(5),
+     width: '100%',
+     [theme.breakpoints.down('xs')]: {
+       padding:theme.spacing(1),
+     }
+   },
+   title: {
+    marginBottom: theme.spacing(2)
+   },
+   textField: {
+     width: '100%'
+   },
+   button: {
+    marginLeft: 'auto',
+    marginTop: theme.spacing(2)
+   },
+   rightIcon: {
+    marginLeft: theme.spacing(1),
   },
 }))
 
@@ -52,40 +78,63 @@ export default function CreateNewPassword(props) {
     <UserContext.Consumer>
     {(user) => (
       <div className={classes.root}>
-        <p>
-            Please enter the verification code sent to your email address and a new password.
-        </p>
-        Email : {user.email}
-        <TextField
-          variant="outlined"
-          margin="normal"
-          required
-          value={state.verificationCode}
-          onChange={e => changeValue('verificationCode', e)}
-          label="Verification Code"
-        />
-        <TextField
-          variant="outlined"
-          margin="normal"
-          required
-          value={state.newPassword}
-          onChange={e => changeValue('newPassword', e)}
-          label="New Password"
-          type="password"
-        />
-        <TextField
-          variant="outlined"
-          margin="normal"
-          required
-          value={state.confirmPassword}
-          onChange={e => changeValue('confirmPassword', e)}
-          label="Confirm Password"
-          type="password"
-        />
-        <Button color="primary" onClick={() => {
-          sendNewPassword(user.email, state.verificationCode, state.newPassword, state.confirmPassword)}}>
-          Send
-        </Button>
+        <Grid
+          container
+          className={classes.paperWrapper}
+          direction="column"
+          justify="center"
+          alignItems="center">
+          <Paper className={classes.paper}>
+            <Grid
+            container
+            direction="column"
+            justify="center"
+            alignItems="center">
+              <Typography variant="h5" className={classes.title}>
+                  Enter the verification code sent to your email address along with your new password.
+              </Typography>
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                className={classes.textField}
+                value={state.verificationCode}
+                onChange={e => changeValue('verificationCode', e)}
+                label="Verification Code"
+              />
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                className={classes.textField}
+                value={state.newPassword}
+                onChange={e => changeValue('newPassword', e)}
+                label="New Password"
+                type="password"
+              />
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                className={classes.textField}
+                value={state.confirmPassword}
+                onChange={e => changeValue('confirmPassword', e)}
+                label="Confirm Password"
+                type="password"
+              />
+              <Button 
+                color="primary" 
+                variant="contained"
+                className={classes.button}
+                onClick={() => {
+                sendNewPassword(user.email, state.verificationCode, state.newPassword, state.confirmPassword)}}>
+                Send
+                <SendIcon className={classes.rightIcon} />
+              </Button>
+
+            </Grid>
+          </Paper>
+        </Grid>
       </div>
     )}
     </UserContext.Consumer>
