@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import {
+  withRouter
+} from 'react-router-dom'
 
 //component imports
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -20,11 +23,11 @@ import { useStyles } from './styles'
 import classNames from 'classnames'
 
 //main component
-export default function SignIn(props) {
+function SignIn(props) {
   const classes = useStyles();
 
   const [state, setValue] = useState({
-    shouldRemember: false,
+    shouldRemember: true,
   });
 
  const toggleShouldRemember = () => {
@@ -36,6 +39,9 @@ export default function SignIn(props) {
   function signIn(e, user) {
     e.preventDefault()
     authService.signIn(user, state.shouldRemember)
+    .then(()=>{
+      props.history.push('/')
+    })
   }
 
   return (
@@ -131,3 +137,5 @@ export default function SignIn(props) {
   </UserContext.Consumer>
   );
 }
+
+export default withRouter(SignIn)

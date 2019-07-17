@@ -1,10 +1,6 @@
 import Amplify from '@aws-amplify/core';
 import Auth from '@aws-amplify/auth'
-
-let firstname = 'Alek'
-let lastname = 'Tutchton'
-let email = 'atutchton@gmail.com'
-let password = '@Nellie31'
+import Decode from 'jwt-decode'
 
 Amplify.configure({
    Auth: {
@@ -19,7 +15,29 @@ Amplify.configure({
    }
 });
 
+const setUserSession = (user, cognitoResponse) => {
+  console.log(cognitoResponse)
+  user.loggedIn = true
+  user.jwt = cognitoResponse.signInUserSession.accessToken.jwtToken
+  localStorage.setItem('user', JSON.stringify(user))
+  user.dispatch({type: 'TOGGLE_USER_LOGGEDIN', payload: true })
+}
+
 export const authService = {
+
+  authenticate: (user) => {
+    if (!user) {
+      user = JSON.parse(localStorage.getItem('user'))
+      if (user === null) { return false } //trying to authenticate non logged in user
+    }
+    console.log('authenticating', user)
+    //check not expired jwt
+    if (Decode(user.jwt).exp > (Date.now() / 1000)){
+      //TODO add other checks on user
+      return true
+    } else return false
+  },
+
   signIn: async(user, remember) => {
     console.log('authservice event', user)
     //send AWS auth
@@ -28,22 +46,24 @@ export const authService = {
         username: user.email,
         password: user.password,
       })
-      //TODO REMEMBER USER
-      console.log('should rememnber this user->', remember)
-      console.log(signInResponse)
+
+      if (remember) {
+        setUserSession(user, signInResponse)
+      }
+      else {
+        // not setting cookie, just logging in and redirecting
+        user.dispatch({type: 'TOGGLE_USER_LOGGEDIN', payload: true })
+      }
+      return signInResponse
     }
     catch (e) {
-      console.log('signup error', e)
+      console.log('signin error', e)
     }
-    //TODO
-    //set time to live?
-    //check if session or local sotrage ie remember me
-    // put user info into storage/cookie
-    //naigvate the router to '/' or '/' something so that the app can check the cookie again on ComponentWillMount
   },
 
   signUp: async(user) => {
     console.log('signing up', user)
+    localStorage.clear()//demo any old sessions
 
     try {
       const signUpResponse = await Auth.signUp({
@@ -54,7 +74,8 @@ export const authService = {
             name: user.name.firstname   
         }
         })
-      console.log(signUpResponse)
+      // setUserSession(user, signUpResponse) //can't set session beccause no JWT returned until email verfied
+      return signUpResponse
     }
     catch (e) {
       console.log('signup error', e)

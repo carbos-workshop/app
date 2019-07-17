@@ -10,4 +10,4 @@ export const WhiteCheckbox = withStyles({
     },
   },
   checked: {},
-})(props => <Checkbox color="default" {...props} />);
+})(props => <Checkbox checked={props.value} color="default" {...props} />);

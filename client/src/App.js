@@ -1,5 +1,10 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Redirect,
+} from "react-router-dom";
+
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
@@ -14,10 +19,19 @@ import ResetPassword from './layouts/ResetPassword'
 // /contexts/reducers
 import { UserContext, User } from './contexts/user.context'
 import { UserReducer } from './contexts/user.reducer'
+import { authService } from './services/auth.service.js';
 
 //temp
 function Index() {
-  return <h2>Home</h2>;
+  return <h2>Logged In Home</h2>;
+}
+//temp
+function VerifyEmail() {
+  return <h2>Please verify your email before continuing.</h2>;
+}
+//temp
+function NoMatch() {
+  return <h2>404</h2>;
 }
 
 export default class App extends React.Component {
@@ -46,7 +60,23 @@ export default class App extends React.Component {
   }
 
   componentWillMount() {
-    //check cookie for logged in user
+    //check local storage for logged in user
+    let userSession = JSON.parse(localStorage.getItem('user'))
+    if (userSession) { 
+      if ( authService.authenticate(userSession) ) {
+        //not expired
+        this.setState({
+          ...this.state,
+          user: {
+            ...this.state.user,
+            ...userSession,
+          }
+        })
+      }
+      else { 
+        console.log('user token expired') 
+      }
+    }
   }
 
   async componentDidMount () {
@@ -66,13 +96,41 @@ export default class App extends React.Component {
           <CssBaseline />
           <MuiThemeProvider theme={lightTheme}>
             <UserContext.Provider value={this.state.user}>
-              <Route path="/" exact component={Index} />
+
+              {/* AUTHENTICATED */}
+              <PrivateRoute path="/" exact component={Index} />
+
+              {/* UNAUTHENTICATED */}
               <Route path="/login" component={Login} />
+              <Route path="/verifyemail" component={VerifyEmail} />
               <Route path="/forgotpassword" component={ResetPassword} />
+              {/* <Route component={NoMatch}/> */}
+
+
             </UserContext.Provider>
           </MuiThemeProvider>
         </React.Fragment>
       </Router>
     ) 
   }
+}
+
+function PrivateRoute({ component: Component, ...rest }) {
+  return (
+    <Route
+      {...rest}
+      render={props =>
+        // try to authenticate based on local storage user
+        authService.authenticate() ? (
+          <Component {...props} />
+        ) : (
+          <Redirect
+            to={{
+              pathname: "/login"
+            }}
+          />
+        )
+      }
+    />
+  );
 }

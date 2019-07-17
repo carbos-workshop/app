@@ -15,13 +15,19 @@ import { UserContext } from '../../contexts/user.context'
 
 //styles
 import { useStyles } from './styles'
+import {
+  withRouter
+} from 'react-router-dom'
 
-export default function SignUp(props) {
+function SignUp(props) {
   const classes = useStyles();
 
   function signUp(e, user) {
     e.preventDefault()
     authService.signUp(user)
+    .then(()=>{
+      props.history.push('/verifyemail')
+    })
   }
 
   return (
@@ -133,3 +139,5 @@ export default function SignUp(props) {
     </UserContext.Consumer>
   );
 }
+
+export default withRouter(SignUp)
