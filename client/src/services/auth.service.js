@@ -43,7 +43,6 @@ export const authService = {
   },
 
   signIn: async(user, remember) => {
-    console.log('authservice event', user)
     //send AWS auth
     try {
       const signInResponse = await Auth.signIn({
@@ -58,10 +57,12 @@ export const authService = {
         // not setting cookie, just logging in and redirecting
         user.dispatch({type: 'TOGGLE_USER_LOGGEDIN', payload: true })
       }
+      console.log(signInResponse)
       return signInResponse
     }
     catch (e) {
       console.log('signin error', e)
+      return e
     }
   },
 
@@ -78,11 +79,13 @@ export const authService = {
             name: user.name.firstname   
         }
         })
+        console.log(signUpResponse)
       // setUserSession(user, signUpResponse) //can't set session beccause no JWT returned until email verfied
       return signUpResponse
     }
     catch (e) {
       console.log('signup error', e)
+      return e
     }
     
   },
@@ -92,24 +95,27 @@ export const authService = {
   },
 
   sendResetPassword: async(email) => {
-    try{
-      const confirmReset = await Auth.forgotPassword(email);
-      console.log(confirmReset)
+    try {
+      const resetResponse = await Auth.forgotPassword(email);
+      return resetResponse
 
     } catch(e) {
       console.log('send Reset Error', e)
+      return { message: e.message }
     }
   },
 
   confirmPasswordReset: async(email, verificationcode, newpassword) => {
     try{
-      await Auth.forgotPasswordSubmit(
+      let resetResponse = await Auth.forgotPasswordSubmit(
         email,
         verificationcode,
         newpassword
-      );
+      )
+      return resetResponse
       } catch(e) {
         console.log('confim new password error', e)
+        return { message: e.message }
       }
   }
 

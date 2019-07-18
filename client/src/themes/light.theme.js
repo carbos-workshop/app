@@ -19,6 +19,11 @@ const theme = createMuiTheme({
       main: lightBlue[400],
       dark: lightBlue[600]
     },
+    error: {
+      dark: red[700],
+      light: red[700],
+      main: red[700],
+    }
   },
   overrides: {
     MuiTouchRipple: {

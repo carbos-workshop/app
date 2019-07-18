@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import {
   withRouter
 } from 'react-router-dom'
+import { withSnackbar } from 'notistack';
+import { Utils } from '../../utils/utils'
 
 //component imports
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -39,8 +41,31 @@ function SignIn(props) {
   function signIn(e, user) {
     e.preventDefault()
     authService.signIn(user, state.shouldRemember)
-    .then(()=>{
-      props.history.push('/')
+    .then( res => {
+     if (res.message) {
+        props.enqueueSnackbar(res.message, {
+          anchorOrigin: {
+           vertical: 'top',
+           horizontal: 'center',
+           },
+           autoHideDuration: 5000,
+           variant: 'warning',
+         })
+      }
+      else {
+        props.history.push('/')
+      }
+    })
+    .catch(()=>{
+      console.log('error thrown during signin')
+      props.enqueueSnackbar('An unexpected problem occured', {
+        anchorOrigin: {
+         vertical: 'top',
+         horizontal: 'center',
+         },
+         autoHideDuration: 3000,
+         variant: 'warning',
+       })
     })
   }
 
@@ -64,9 +89,11 @@ function SignIn(props) {
             : null)])}>
  
         <form className={classes.form} noValidate>
+
           <WhiteTextField
             variant="outlined"
             margin="normal"
+            error={(Boolean((user.email.length > 5) && !Utils.validateEmail(user.email)))}
             required
             fullWidth
             key={`${props.hideForm}1`} //attaching key for props stops resize bug in material UI resize text fields
@@ -138,4 +165,4 @@ function SignIn(props) {
   );
 }
 
-export default withRouter(SignIn)
+export default withSnackbar(withRouter(SignIn))

@@ -46,5 +46,5 @@ export const useStyles = makeStyles(theme => ({
       width: '0',
       display: 'none'
     }
-  }
+  },
 }));

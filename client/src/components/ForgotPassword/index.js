@@ -1,5 +1,9 @@
 import React from 'react';
-
+// import {
+//   withRouter
+// } from 'react-router-dom'
+import { withSnackbar } from 'notistack';
+import { Utils } from '../../utils/utils'
 //components
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
@@ -39,14 +43,46 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function ForgotPassword(props) {
+function ForgotPassword(props) {
   const classes = useStyles();
 
+  function sendWarning(message) {
+    props.enqueueSnackbar(message, {
+      anchorOrigin: {
+       vertical: 'top',
+       horizontal: 'center',
+       },
+       autoHideDuration: 5000,
+       variant: 'warning',
+     })
+  }
+  
+  function sendMessage(message) {
+    props.enqueueSnackbar(message, {
+      anchorOrigin: {
+        vertical: 'top',
+        horizontal: 'center',
+        },
+        autoHideDuration: 2000,
+      })
+  }
+
   const sendReset = email => {
-    props.toggleSentResetView()
     authService.sendResetPassword(email)
-    //display message saying check email
-    console.log('need to display message saying email is sent')
+    .then( res => {
+      console.log('res', res)
+      if (res.message) {
+        sendWarning(res.message)
+      }
+      else {
+        props.toggleSentResetView()
+        sendMessage('Reset email sent successfully')
+      }
+    })
+    .catch(()=>{
+      console.log('error sending reset email')
+      sendWarning('An unexpected problem occured')
+    })
   }
 
   return(
@@ -72,6 +108,7 @@ export default function ForgotPassword(props) {
                 variant="outlined"
                 margin="normal"
                 required
+                error={Boolean((user.email.length > 5) && !Utils.validateEmail(user.email))}
                 className={classes.textField}
                 onChange={e => {  user.dispatch({type: 'UPDATE_USER_EMAIL', payload: e.target.value }) }}
                 value={user.email}
@@ -79,6 +116,7 @@ export default function ForgotPassword(props) {
               />
               <Button 
                 className={classes.button}
+                disabled={!Utils.validateEmail(user.email)}
                 onClick={() => {sendReset(user.email)}}>
                 Reset Password
               </Button>
@@ -89,5 +127,6 @@ export default function ForgotPassword(props) {
     )}
     </UserContext.Consumer>
   )
-
 }
+
+export default withSnackbar(ForgotPassword)

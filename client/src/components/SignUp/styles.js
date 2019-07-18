@@ -20,7 +20,10 @@ export const useStyles = makeStyles(theme => ({
     width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing(3),
   },
-
+  textField: {
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1)
+  },
   changeViewModeButton: {
     [theme.breakpoints.up('md')]: {
       display: 'none'
@@ -32,5 +35,9 @@ export const useStyles = makeStyles(theme => ({
       width: '0',
       display: 'none',
     }
+  },
+  buttonRow: {
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(2)
   }
 }));

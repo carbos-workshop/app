@@ -1,5 +1,9 @@
 import React, {useState} from 'react';
-
+import { withSnackbar } from 'notistack';
+import { Utils } from '../../utils/utils'
+import {
+  withRouter
+} from 'react-router-dom'
 //components
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -44,21 +48,46 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-export default function CreateNewPassword(props) {
+function CreateNewPassword(props) {
   const classes = useStyles();
 
-  const sendNewPassword = (email, code, password, confirmPassword) => {
-    //check everything is good with values
-    if(password !== confirmPassword) {
-      //TODO have this show an error msg
-      console.log('passwords do not match')
-    }
+  function sendWarning(message) {
+    props.enqueueSnackbar(message, {
+      anchorOrigin: {
+       vertical: 'top',
+       horizontal: 'center',
+       },
+       autoHideDuration: 5000,
+       variant: 'warning',
+     })
+  }
+  
+  function sendMessage(message) {
+    props.enqueueSnackbar(message, {
+      anchorOrigin: {
+        vertical: 'top',
+        horizontal: 'center',
+        },
+        autoHideDuration: 2000,
+      })
+  }
 
-    props.toggleSentResetView()
+  const sendNewPassword = (email, code, password) => {
     
     authService.confirmPasswordReset(email, code, password)
-    //display message saying worked
-    //redirtet to login
+    .then(res => {
+      if (!res) {
+        props.history.push('/login')
+        sendMessage('Password successfully changed')
+      }
+      else if (res.message) {
+        sendWarning(res.message)
+      }
+    })
+    .catch( e => {
+      console.log('error sending new password email', e)
+      sendWarning('An unexpected problem occured')
+    })
   }
 
   const [state, setValue] = useState({
@@ -66,6 +95,15 @@ export default function CreateNewPassword(props) {
     newPassword: '',
     confirmPassword: ''
   });
+
+  const validateForm = () => {
+    return Boolean(
+      state.verificationCode
+      && state.newPassword 
+      && state.confirmPassword 
+      && Utils.compareStrings(state.newPassword, state.confirmPassword)
+    )
+  }
 
   const changeValue = (name, event) => {
     setValue({
@@ -116,6 +154,7 @@ export default function CreateNewPassword(props) {
                 variant="outlined"
                 margin="normal"
                 required
+                error={Boolean(state.confirmPassword && !Utils.compareStrings(state.newPassword, state.confirmPassword))}
                 className={classes.textField}
                 value={state.confirmPassword}
                 onChange={e => changeValue('confirmPassword', e)}
@@ -125,9 +164,10 @@ export default function CreateNewPassword(props) {
               <Button 
                 color="primary" 
                 variant="contained"
+                disabled={!validateForm()}
                 className={classes.button}
                 onClick={() => {
-                sendNewPassword(user.email, state.verificationCode, state.newPassword, state.confirmPassword)}}>
+                sendNewPassword(user.email, state.verificationCode, state.newPassword)}}>
                 Send
                 <SendIcon className={classes.rightIcon} />
               </Button>
@@ -139,5 +179,6 @@ export default function CreateNewPassword(props) {
     )}
     </UserContext.Consumer>
   )
-
 }
+
+export default withSnackbar(withRouter(CreateNewPassword))

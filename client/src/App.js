@@ -7,10 +7,12 @@ import {
 
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import { SnackbarProvider } from 'notistack';
 
 import lightTheme from './themes/light.theme.js';
 import { getAssist } from './services/blocknative.service'
 import './App.css';
+
 
 import Login from './layouts/Login'
 import ResetPassword from './layouts/ResetPassword'
@@ -24,11 +26,6 @@ import { authService } from './services/auth.service.js';
 //temp
 function Index() {
   return <h2>Logged In Home</h2>;
-}
-
-//temp
-function NoMatch() {
-  return <h2>404</h2>;
 }
 
 export default class App extends React.Component {
@@ -93,17 +90,18 @@ export default class App extends React.Component {
           <CssBaseline />
           <MuiThemeProvider theme={lightTheme}>
             <UserContext.Provider value={this.state.user}>
+              <SnackbarProvider maxSnack={3}>
+                
+                {/* AUTHENTICATED */}
+                <PrivateRoute path="/" exact component={Index} />
 
-              {/* AUTHENTICATED */}
-              <PrivateRoute path="/" exact component={Index} />
+                {/* UNAUTHENTICATED */}
+                <Route path="/login" component={Login} />
+                <Route path="/verifyemail" component={VerifyEmail} />
+                <Route path="/forgotpassword" component={ResetPassword} />
+                {/* <Route component={NoMatch}/> */}
 
-              {/* UNAUTHENTICATED */}
-              <Route path="/login" component={Login} />
-              <Route path="/verifyemail" component={VerifyEmail} />
-              <Route path="/forgotpassword" component={ResetPassword} />
-              {/* <Route component={NoMatch}/> */}
-
-
+              </SnackbarProvider>
             </UserContext.Provider>
           </MuiThemeProvider>
         </React.Fragment>

@@ -1,5 +1,6 @@
 import React from 'react';
-
+import { withSnackbar } from 'notistack';
+import { Utils } from '../../utils/utils'
 //component imports
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -22,12 +23,58 @@ import {
 function SignUp(props) {
   const classes = useStyles();
 
+  function sendWarning(message) {
+    props.enqueueSnackbar(message, {
+      anchorOrigin: {
+       vertical: 'top',
+       horizontal: 'center',
+       },
+       autoHideDuration: 5000,
+       variant: 'warning',
+     })
+  }
+  
+  function sendMessage(message) {
+    props.enqueueSnackbar(message, {
+      anchorOrigin: {
+        vertical: 'top',
+        horizontal: 'center',
+        },
+        autoHideDuration: 2000,
+      })
+  }
+
   function signUp(e, user) {
     e.preventDefault()
+    if (!validateForm(user)) {
+      sendWarning('Please fill out all fields')
+      return
+    }
     authService.signUp(user)
-    .then(()=>{
-      props.history.push('/verifyemail')
-    })
+    .then( res => {
+      console.log('res', res)
+      if (res.message) {
+        sendWarning(res.message)
+      }
+      else {
+        sendMessage('Verification email sent')
+        props.history.push('/verifyemail')
+      }
+     })
+     .catch(()=>{
+       console.log('error thrown during signup')
+       sendWarning('An unexpected problem occured')
+     })
+  }
+
+  function validateForm(user){
+    return Boolean(
+      user.name.firstname 
+      && user.name.lastname 
+      && Utils.validateEmail(user.email)
+      && user.email
+      && user.password
+    )
   }
 
   return (
@@ -58,6 +105,7 @@ function SignUp(props) {
                     name="firstname"
                     variant="outlined"
                     required
+                    className={classes.textField}
                     key={`${props.hideForm}0`}  //attaching key for props stops resize bug in material UI resize text fields
                     fullWidth
                     label="First Name"
@@ -70,6 +118,7 @@ function SignUp(props) {
                   <TextField
                     variant="outlined"
                     required
+                    className={classes.textField}
                     fullWidth
                     key={`${props.hideForm}1`}  //attaching key for props stops resize bug in material UI resize text fields
                     label="Last Name"
@@ -83,7 +132,9 @@ function SignUp(props) {
                   <TextField
                     variant="outlined"
                     required
+                    className={classes.textField}
                     fullWidth
+                    error={(Boolean((user.email.length > 5) && !Utils.validateEmail(user.email)))}
                     key={`${props.hideForm}2`}  //attaching key for props stops resize bug in material UI resize text fields
                     id="email"
                     label="Email Address"
@@ -97,6 +148,7 @@ function SignUp(props) {
                   <TextField
                     variant="outlined"
                     required
+                    className={classes.textField}
                     fullWidth
                     onChange={e => { user.dispatch({type: 'UPDATE_USER_PASSWORD', payload: e.target.value}) }}
                     value={user.password}
@@ -109,7 +161,7 @@ function SignUp(props) {
                 </Grid>
               </Grid>
 
-              <Grid container spacing={2}>
+              <Grid container spacing={2} className={classes.buttonRow}>
                 <Grid item xs={6} md={12}>
                   <Button
                     type="submit"
@@ -140,4 +192,4 @@ function SignUp(props) {
   );
 }
 
-export default withRouter(SignUp)
+export default withSnackbar(withRouter(SignUp))
