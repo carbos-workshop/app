@@ -38,19 +38,24 @@ function SignIn(props) {
     })
   }
 
+  function sendWarning(message) {
+    props.enqueueSnackbar(message, {
+      anchorOrigin: {
+       vertical: 'top',
+       horizontal: 'center',
+       },
+       autoHideDuration: 5000,
+       variant: 'warning',
+     })
+  }
+
+
   function signIn(e, user) {
     e.preventDefault()
     authService.signIn(user, state.shouldRemember)
     .then( res => {
      if (res.message) {
-        props.enqueueSnackbar(res.message, {
-          anchorOrigin: {
-           vertical: 'top',
-           horizontal: 'center',
-           },
-           autoHideDuration: 5000,
-           variant: 'warning',
-         })
+      sendWarning(res.message)
       }
       else {
         props.history.push('/')
@@ -58,14 +63,7 @@ function SignIn(props) {
     })
     .catch(()=>{
       console.log('error thrown during signin')
-      props.enqueueSnackbar('An unexpected problem occured', {
-        anchorOrigin: {
-         vertical: 'top',
-         horizontal: 'center',
-         },
-         autoHideDuration: 3000,
-         variant: 'warning',
-       })
+      sendWarning('An unexpected problem occured')
     })
   }
 
