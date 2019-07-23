@@ -16,6 +16,7 @@ import { TextButton } from './TextButton'
 import { WhiteButton } from './WhiteButton'
 import { WhiteTextField } from './WhiteTextField'
 import { WhiteCheckbox } from './WhiteCheckbox'
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 //services/contextx
 import { authService } from '../../services/auth.service'
@@ -30,10 +31,12 @@ function SignIn(props) {
 
   const [state, setValue] = useState({
     shouldRemember: true,
+    loading: false
   });
 
  const toggleShouldRemember = () => {
     setValue({
+      ...state,
       shouldRemember: !state.shouldRemember
     })
   }
@@ -52,12 +55,19 @@ function SignIn(props) {
 
   function signIn(e, user) {
     e.preventDefault()
+
+    setValue({
+      ...state,
+      loading: true
+    })
+
     authService.signIn(user, state.shouldRemember)
     .then( res => {
      if (res.message) {
       sendWarning(res.message)
       }
       else {
+        // user.dispatch({type: 'SET_USER_LOGGEDIN', payload: true })
         props.history.push('/')
       }
     })
@@ -131,9 +141,17 @@ function SignIn(props) {
                 fullWidth
                 variant="contained"
                 color="default"
+                disabled={state.loading}
                 onClick={e => { signIn(e, user) }}
                 className={classes.submit}>
-                Sign In
+                {
+                  state.loading
+                  ? <CircularProgress 
+                      size={24}
+                      thickness={4}
+                      className={classes.progress} />
+                  : "Sign In"
+                }
               </WhiteButton>
             </Grid>
 

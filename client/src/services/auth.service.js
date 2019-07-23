@@ -20,7 +20,7 @@ const setUserSession = (user, cognitoResponse) => {
   user.loggedIn = true
   user.jwt = cognitoResponse.signInUserSession.accessToken.jwtToken
   localStorage.setItem('user', JSON.stringify(user))
-  user.dispatch({type: 'TOGGLE_USER_LOGGEDIN', payload: true })
+  user.dispatch({type: 'SET_USER_LOGGEDIN', payload: true })
 }
 
 export const authService = {
@@ -55,7 +55,7 @@ export const authService = {
       }
       else {
         // not setting cookie, just logging in and redirecting
-        user.dispatch({type: 'TOGGLE_USER_LOGGEDIN', payload: true })
+        user.dispatch({type: 'SET_USER_LOGGEDIN', payload: true })
       }
       console.log(signInResponse)
       return signInResponse
@@ -89,6 +89,12 @@ export const authService = {
     }
     
   },
+
+  logout: async(user) => {
+    user.dispatch({type: 'SET_USER_LOGGEDIN', payload: false })
+    localStorage.clear()
+    return
+  }, 
 
   socialSignIn: async(event) => {
     //TODO

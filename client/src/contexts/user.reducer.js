@@ -30,10 +30,10 @@ export const UserReducer = (user, action) => {
           lastname: action.payload
         }
       }
-    case 'TOGGLE_USER_LOGGEDIN':
+    case 'SET_USER_LOGGEDIN':
       return {
         ...user,
-        loggedIn: !user.loggedIn
+        loggedIn: action.payload
       }
     default:
       throw new Error('Unexpected action');

@@ -31,6 +31,9 @@ export const useStyles = makeStyles(theme => ({
   whiteText: {
     color: 'white'
   },
+  progress: {
+    color: 'rgba(255,255,255,.5)'
+  },
   formFieldWrapper:{
     margin: theme.spacing(1),
     marginTop: 0,

@@ -106,6 +106,7 @@ export default class App extends React.Component {
                       <Switch>
                         {/* AUTHENTICATED */}
                         <PrivateRoute exact path="/" component={Dashboard} />
+
                         <Route component={NoMatch}/>
                       </Switch>
                     </AppLayout>
@@ -122,7 +123,7 @@ export default class App extends React.Component {
                         pathname: "/login"
                         }}
                       />
-                      
+
                       <Route component={NoMatch}/>
                     </Switch>
 

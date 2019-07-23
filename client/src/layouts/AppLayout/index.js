@@ -1,6 +1,5 @@
 import React from 'react';
-import {withRouter} from 'react-router-dom'
-
+import Header from '../../components/Header'
 //components
 
 //styles
@@ -18,7 +17,7 @@ export default function AppLayout(props) {
   return(
     <div className={classes.root}>
 
-      <h1>HEADER</h1>
+      <Header />
 
       { props.children }
 
