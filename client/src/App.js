@@ -25,12 +25,15 @@ import { UserReducer } from './contexts/user.reducer'
 import { authService } from './services/auth.service.js';
 
 //temp
-function Index() {
-  return <h2>Logged In Home</h2>;
-}
+import AppLayout from './layouts/AppLayout'
+
 function NoMatch() {
   return <h2>404</h2>;
 }
+function Dashboard() {
+  return <h2>dash</h2>;
+}
+
 
 export default class App extends React.Component {
 
@@ -93,22 +96,40 @@ export default class App extends React.Component {
         <React.Fragment>
           <CssBaseline />
           <MuiThemeProvider theme={lightTheme}>
+            <SnackbarProvider maxSnack={3}>
             <UserContext.Provider value={this.state.user}>
-              <SnackbarProvider maxSnack={3}>
-                
-                <Switch>
-                  {/* AUTHENTICATED */}
-                  <PrivateRoute path="/" exact component={Index} />
+                                  
+                  {
+                   authService.authenticate()
+                    ?
+                    <AppLayout>
+                      <Switch>
+                        {/* AUTHENTICATED */}
+                        <PrivateRoute exact path="/" component={Dashboard} />
+                        <Route component={NoMatch}/>
+                      </Switch>
+                    </AppLayout>
+                    :
+                    <Switch>
+                      {/* UNAUTHENTICATED */}
+                      <Route path="/login" component={Login} />
+                      <Route path="/verifyemail" component={VerifyEmail} />
+                      <Route path="/forgotpassword" component={ResetPassword} />
 
-                  {/* UNAUTHENTICATED */}
-                  <Route path="/login" component={Login} />
-                  <Route path="/verifyemail" component={VerifyEmail} />
-                  <Route path="/forgotpassword" component={ResetPassword} />
-                  <Route component={NoMatch}/>
-                </Switch>
+                      
+                      <Redirect
+                        to={{
+                        pathname: "/login"
+                        }}
+                      />
+                      
+                      <Route component={NoMatch}/>
+                    </Switch>
 
-              </SnackbarProvider>
+                  }
+
             </UserContext.Provider>
+            </SnackbarProvider>
           </MuiThemeProvider>
         </React.Fragment>
       </Router>
