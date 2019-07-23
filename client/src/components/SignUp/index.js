@@ -1,4 +1,5 @@
-import React from 'react';
+import React, {useState} from 'react';
+import { withRouter } from 'react-router-dom'
 import { withSnackbar } from 'notistack';
 import { Utils } from '../../utils/utils'
 //component imports
@@ -7,21 +8,30 @@ import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
-import classNames from 'classnames'
 import Paper from '@material-ui/core/Paper';
+
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormControl from '@material-ui/core/FormControl';
+import FormLabel from '@material-ui/core/FormLabel';
 
 //services/contextx
 import { authService } from '../../services/auth.service'
 import { UserContext } from '../../contexts/user.context'
 
 //styles
+import classNames from 'classnames'
 import { useStyles } from './styles'
-import {
-  withRouter
-} from 'react-router-dom'
 
 function SignUp(props) {
   const classes = useStyles();
+
+  const [accountType, setAccountType] = React.useState('individual');
+
+  function handleChange(event) {
+    setAccountType(event.target.value);
+  }
 
   function sendWarning(message) {
     props.enqueueSnackbar(message, {
@@ -50,6 +60,8 @@ function SignUp(props) {
       sendWarning('Please fill out all fields')
       return
     }
+    user.accountType = accountType
+    console.error('NEED TO SET USER ACCOUNT TYPE IN COGNITO OR RDS. INFO NOT SAVED OUTSIDE OF CURRENT SESSION.')
     authService.signUp(user)
     .then( res => {
       console.log('res', res)
@@ -74,6 +86,7 @@ function SignUp(props) {
       && Utils.validateEmail(user.email)
       && user.email
       && user.password
+      && accountType
     )
   }
 
@@ -158,6 +171,28 @@ function SignUp(props) {
                     type="password"
                     autoComplete="current-password"
                   />
+                </Grid>
+
+                <Grid item xs={12}>
+                  <FormControl component="fieldset" className={classes.radioWrapper}>
+                    <FormLabel component="label" >Account Type</FormLabel>
+                    <RadioGroup
+                      aria-label="Account Type"
+                      name="accountType"
+                      value={accountType}
+                      onChange={handleChange}>
+                        
+                      <Grid container>
+                        <Grid item xs={12} sm={6}>
+                          <FormControlLabel value="individual" control={<Radio color="primary" />} label="Individual" />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                          <FormControlLabel value="business" control={<Radio color="primary" />} label="Business" />
+                        </Grid>
+                      </Grid>
+                  
+                    </RadioGroup>
+                  </FormControl>
                 </Grid>
               </Grid>
 

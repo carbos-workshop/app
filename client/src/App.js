@@ -2,6 +2,7 @@ import React from 'react';
 import {
   BrowserRouter as Router,
   Route,
+  Switch,
   Redirect,
 } from "react-router-dom";
 
@@ -26,6 +27,9 @@ import { authService } from './services/auth.service.js';
 //temp
 function Index() {
   return <h2>Logged In Home</h2>;
+}
+function NoMatch() {
+  return <h2>404</h2>;
 }
 
 export default class App extends React.Component {
@@ -92,14 +96,16 @@ export default class App extends React.Component {
             <UserContext.Provider value={this.state.user}>
               <SnackbarProvider maxSnack={3}>
                 
-                {/* AUTHENTICATED */}
-                <PrivateRoute path="/" exact component={Index} />
+                <Switch>
+                  {/* AUTHENTICATED */}
+                  <PrivateRoute path="/" exact component={Index} />
 
-                {/* UNAUTHENTICATED */}
-                <Route path="/login" component={Login} />
-                <Route path="/verifyemail" component={VerifyEmail} />
-                <Route path="/forgotpassword" component={ResetPassword} />
-                {/* <Route component={NoMatch}/> */}
+                  {/* UNAUTHENTICATED */}
+                  <Route path="/login" component={Login} />
+                  <Route path="/verifyemail" component={VerifyEmail} />
+                  <Route path="/forgotpassword" component={ResetPassword} />
+                  <Route component={NoMatch}/>
+                </Switch>
 
               </SnackbarProvider>
             </UserContext.Provider>

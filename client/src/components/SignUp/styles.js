@@ -38,6 +38,10 @@ export const useStyles = makeStyles(theme => ({
   },
   buttonRow: {
     marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(2)
-  }
+    marginBottom: theme.spacing(1)
+  },
+  radioWrapper: {
+    width: '100%'
+  },
+
 }));

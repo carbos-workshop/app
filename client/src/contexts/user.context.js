@@ -7,6 +7,7 @@ export const User = {
     firstname: '',
     lastname: ''
   },
+  accountType: '',
   loggedIn: false,
 }
 
